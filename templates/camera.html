@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tail Rope Fault Detection - Camera</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #4b0082;
+            text-align: center;
+            font-weight: bold;
+        }
+        #cameraFeed {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Initially hidden */
+            margin: 20px auto; /* Center the feed */
+        }
+        .btn-custom {
+            background-color: #4b0082;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 5px; /* Space between buttons */
+        }
+        .btn-custom:hover {
+            background-color: #6a0dad;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Webcam Video Feed - Tail Rope Fault Detection</h1>
+    
+    <div>
+        <img id="cameraFeed" src="{{ url_for('video_feed') }}" width="640" height="480" alt="Camera Feed"> <!-- Initially hidden -->
+    </div>
+    
+    <div class="text-center mt-4">
+        <button id="startButton" class="btn btn-custom" onclick="startCamera()">Start Camera</button>
+        <button id="stopButton" class="btn btn-custom" onclick="stopCamera()" disabled>Stop Camera</button>
+    </div>
+    
+    <!-- Changed the back link to a button -->
+    <div class="text-center mt-4">
+        <a href="{{ url_for('back') }}" class="btn btn-custom">Back</a>
+    </div>
+</div>
+
+<script>
+    let alarmTriggered = false;
+    let cameraRunning = false;
+    let intervalId;
+
+    function checkForFaulty(prediction) {
+        if (prediction.includes("Faulty") && !alarmTriggered) {
+            alarmTriggered = true;
+            let audio = new Audio("/static/alarm.mp3");
+            audio.play();
+        }
+    }
+
+    function startCamera() {
+        cameraRunning = true;
+        document.getElementById('cameraFeed').style.display = 'block'; // Show the camera feed
+        document.getElementById('startButton').disabled = true; // Disable start button
+        document.getElementById('stopButton').disabled = false; // Enable stop button
+        
+        // Fetch predictions every second
+        intervalId = setInterval(() => {
+            if (cameraRunning) {
+                fetch("/video_feed").then(response => {
+                    response.text().then(text => {
+                        checkForFaulty(text);
+                    });
+                });
+            }
+        }, 1000);
+    }
+
+    function stopCamera() {
+        cameraRunning = false;
+        document.getElementById('cameraFeed').style.display = 'none'; // Hide the camera feed
+        document.getElementById('startButton').disabled = false; // Enable start button
+        document.getElementById('stopButton').disabled = true; // Disable stop button
+
+        // Clear the interval to stop fetching predictions
+        clearInterval(intervalId);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Account</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 60px; /* Increased padding for more height */
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            min-height: 100vh; /* Full screen height */
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        .profile-info {
+            margin-bottom: 70px;
+        }
+
+        .image-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px; /* Increased gap for better spacing */
+            margin-top: 40px;
+        }
+
+        .image-item {
+            text-align: center;
+            width: 150px;
+        }
+
+        .image-links a {
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .image-links a:hover {
+            transform: scale(1.05);
+        }
+
+        .image-links img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .image-links p {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .logout {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .logout a {
+            color: #4b0082;
+            text-decoration: none;
+        }
+
+        .logout a:hover {
+            color: #6a0dad;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center profile-info">
+            <h1>Welcome!!</h1>
+            <div class="logout">
+                Logged in: <strong>{{ session.name }}</strong> | 
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <h2>Fault Detetction In Tail Ropes!</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- <h3>Choose an action:</h3> -->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 image-links">
+            <div class="image-item">
+                <a href="{{ url_for('photo') }}">
+                    <img src="{{ url_for('static', filename='images/photo1.png') }}" alt="Photo">
+                </a>
+                <p>Upload Photos</p>
+            </div>
+            <div class="image-item">
+                <a href="{{ url_for('video') }}">
+                    <img src="{{ url_for('static', filename='images/video.png') }}" alt="Video">
+                </a>
+                <p>Upload Videos</p>
+            </div>
+            <div class="image-item">
+                <a href="{{ url_for('camera') }}">
+                    <img src="{{ url_for('static', filename='images/camera.png') }}" alt="Camera">
+                </a>
+                <p>Open Camera</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
